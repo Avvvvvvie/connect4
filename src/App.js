@@ -1,12 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
+import { Board } from './Board'
+import {useState} from "react";
 
-let board = new Board()
-
-function LoadButton() {
+function LoadButton({change}) {
     const handler = () => {
         let data = JSON.parse(localStorage.getItem('board'))
-        board = new Board(data)
+        change(new Board(data))
     }
     return (
         <button onClick={handler}>
@@ -14,7 +14,7 @@ function LoadButton() {
         </button>
     )
 }
-function SaveButton() {
+function SaveButton({ board }) {
   const handler = () => {
       let data = JSON.stringify(board.save())
       localStorage.setItem('board', data)
@@ -26,25 +26,31 @@ function SaveButton() {
   )
 }
 
-function WinDisplay() {
+function WinDisplay({ value }) {
+    if(!value) {
+        return null
+    }
     return (
         <div className="winDisplay">
-
+            The winner is { value }
         </div>
     )
 }
 
-function TurnDisplay() {
+function TurnDisplay({ value, disabled }) {
+    if(disabled) {
+        return null
+    }
     return (
         <div className="turnDisplay">
-
+            It's { value }s Turn
         </div>
     )
 }
 
 function Column(props) {
     return (
-        <div className="column" onClick={handler}>
+        <div className="column" onClick={props.onClick}>
             {
                 props.children
             }
@@ -60,20 +66,22 @@ function Field({ value }) {
     )
 }
 
-function Board() {
+function BoardView({ board, setBoard, disabled }) {
     return (
         <div className="board">
             {
-                board.state.forEach((column, index) => {
+                board.state.map((column, index) => {
                     function handler() {
+                        console.log('hi')
                         board.play(index)
+                        setBoard(new Board(board.save()))
                     }
                     return (
-                        <Column onClick={handler}>
+                        <Column index={index} key={index} onClick={disabled ? undefined : handler}>
                             {
-                                column.forEach((value) => {
+                                column.map((value, index) => {
                                     return (
-                                        <Field value={value}/>
+                                        <Field value={value} key={index}/>
                                     )
                                 })
                             }
@@ -86,26 +94,14 @@ function Board() {
 }
 
 function App() {
+  const [board, setBoard] = useState(new Board())
+  let winner = board.getWinner()
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-        <LoadButton/><SaveButton/>
-        <Board/>
-        <TurnDisplay/>
-        <WinDisplay/>
+        <LoadButton change={setBoard}/><SaveButton board={board}/>
+        <BoardView disabled={!!winner} board={board} setBoard={setBoard}/>
+        <TurnDisplay value={board.getTurn()} disabled={!!winner}/>
+        <WinDisplay value={winner}/>
     </div>
   );
 }
