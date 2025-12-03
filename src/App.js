@@ -3,10 +3,10 @@ import './App.css';
 import { Board } from './Board'
 import {useState} from "react";
 
-function LoadButton({change}) {
+function LoadButton({ setBoard }) {
     const handler = () => {
         let data = JSON.parse(localStorage.getItem('board'))
-        change(new Board(data))
+        setBoard(new Board(data))
     }
     return (
         <button onClick={handler}>
@@ -24,6 +24,14 @@ function SaveButton({ board }) {
         Save Game
       </button>
   )
+}
+
+function ResetButton({ setBoard }) {
+    return (
+        <button onClick={() => setBoard(new Board())}>
+            Reset Game
+        </button>
+    )
 }
 
 function WinDisplay({ value }) {
@@ -72,7 +80,6 @@ function BoardView({ board, setBoard, disabled }) {
             {
                 board.state.map((column, index) => {
                     function handler() {
-                        console.log('hi')
                         board.play(index)
                         setBoard(new Board(board.save()))
                     }
@@ -98,7 +105,7 @@ function App() {
   let winner = board.getWinner()
   return (
     <div className="App">
-        <LoadButton change={setBoard}/><SaveButton board={board}/>
+        <LoadButton setBoard={setBoard}/><SaveButton board={board}/><ResetButton setBoard={setBoard}>Reset</ResetButton>
         <BoardView disabled={!!winner} board={board} setBoard={setBoard}/>
         <TurnDisplay value={board.getTurn()} disabled={!!winner}/>
         <WinDisplay value={winner}/>
