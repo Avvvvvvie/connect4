@@ -77,6 +77,7 @@ function Field({ value }) {
 function BoardView({ board, setBoard, disabled }) {
     return (
         <div className="board">
+            <div className="holder"></div>
             {
                 board.state.map((column, index) => {
                     function handler() {
@@ -84,7 +85,7 @@ function BoardView({ board, setBoard, disabled }) {
                         setBoard(new Board(board.save()))
                     }
                     return (
-                        <Column index={index} key={index} onClick={disabled ? undefined : handler}>
+                        <Column key={index} onClick={disabled ? undefined : handler}>
                             {
                                 column.map((value, index) => {
                                     return (
@@ -96,6 +97,7 @@ function BoardView({ board, setBoard, disabled }) {
                     )
                 })
             }
+            <div className="holder"></div>
         </div>
     )
 }

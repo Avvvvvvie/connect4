@@ -1,14 +1,71 @@
+:root {
+  --board: #0186d5;
+  --board_shadow: #1e71ad;
+  --piece_blue: #3636bd;
+  --piece_blue_shadow: #3b3bc5;
+  --piece_red: #d24848;
+  --piece_red_shadow: #d96262;
+  --text: #fece00;
+  --accent: #e8372d;
+  --accent_shadow: #ce371d;
+  --highlight: #f9f17a;
+  --white: #ffffff;
+  --accent2: #525252
+}
+
+.App {
+  text-align: center;
+  padding: 1rem;
+}
+
+button {
+  /*Reset's every elements apperance*/
+  background: none repeat scroll 0 0 transparent;
+  border: medium none;
+  border-spacing: 0;
+  font-family: 'PT Sans Narrow',sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 1.42rem;
+  list-style: none outside none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  text-decoration: none;
+  text-indent: 0;
+}
+
+button, .winDisplay, .turnDisplay {
+  background: var(--accent);
+  color: var(--text);
+  font-size: 2rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  font-weight: bolder;
+}
+
+button {
+  cursor: pointer;
+  margin: 0.3rem;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(105%);
+  background: var(--accent_shadow);
+}
+
 div {
   box-sizing: border-box;
 }
 
 .board {
   width: fit-content;
-  margin: auto;
-  outline: 1px solid black;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  position: relative;
+  margin: 1rem auto;
 }
 
 .board .column {
@@ -17,9 +74,9 @@ div {
 }
 
 .board .field {
-  border: 1px solid black;
   width: 12vw;
   height: 12vw;
+  background: var(--board);
 }
 
 .board .field:first-child {
@@ -31,10 +88,36 @@ div {
   height: 10vw;
   border-radius: 50%;
   margin: 1vw;
+  background: var(--white);
+  border: 5px solid var(--board_shadow);
 }
 .board .piece[data-state=BLUE] {
-  background-color: blue;
+  background-color: var(--piece_blue_shadow);
 }
 .board .piece[data-state=RED] {
-  background-color: red;
+  background-color: var(--piece_red_shadow);
+}
+.piece::before {
+  content: '';
+  display: block;
+  position: relative;
+  width: 80%;
+  top: 10%;
+  left: 10%;
+  height: 80%;
+  border-radius: inherit;
+}
+.piece[data-state=BLUE]::before {
+  background: var(--piece_blue);
+}
+.piece[data-state=RED]::before {
+  background: var(--piece_red);
+}
+
+.holder {
+  background: url('./assets/holder.svg');
+  width: 3rem;
+}
+.holder:nth-child(1) {
+  transform: scaleX(-1);
 }
