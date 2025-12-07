@@ -2,7 +2,7 @@
   --board: #0186d5;
   --board_shadow: #1e71ad;
   --piece_blue: #3636bd;
-  --piece_blue_shadow: #3b3bc5;
+  --piece_blue_shadow: #3f3fc7;
   --piece_red: #d24848;
   --piece_red_shadow: #d96262;
   --text: #fece00;
@@ -16,6 +16,8 @@
 .App {
   text-align: center;
   padding: 1rem;
+  width: fit-content;
+  margin: auto;
 }
 
 button {
@@ -38,15 +40,20 @@ button {
 button, .winDisplay, .turnDisplay {
   background: var(--accent);
   color: var(--text);
-  font-size: 2rem;
-  padding: 1rem;
-  border-radius: 1rem;
+  font-size: 2vw;
+  padding: 1vw;
+  border-radius: 3vw;
   font-weight: bolder;
+}
+
+.winDisplay, .turnDisplay {
+  max-width: 30vw;
+  margin: 2vw auto auto;
 }
 
 button {
   cursor: pointer;
-  margin: 0.3rem;
+  margin: 1vw;
   transition: 0.3s;
 }
 
@@ -65,7 +72,7 @@ div {
   flex-direction: row;
   flex-wrap: wrap;
   position: relative;
-  margin: 1rem auto;
+  margin: 1vw auto;
 }
 
 .board .column {
@@ -74,8 +81,8 @@ div {
 }
 
 .board .field {
-  width: 12vw;
-  height: 12vw;
+  width: 7vw;
+  height: 7vw;
   background: var(--board);
 }
 
@@ -84,12 +91,12 @@ div {
 }
 
 .board .field .piece {
-  width: 10vw;
-  height: 10vw;
+  width: 5vw;
+  height: 5vw;
   border-radius: 50%;
-  margin: 1vw;
+  margin: 0.75vw;
   background: var(--white);
-  border: 5px solid var(--board_shadow);
+  border: 0.5vw solid var(--board_shadow);
 }
 .board .piece[data-state=BLUE] {
   background-color: var(--piece_blue_shadow);
@@ -115,9 +122,22 @@ div {
 }
 
 .holder {
-  background: url('./assets/holder.svg');
-  width: 3rem;
+  background-image: url("data:image/svg+xml,%3Csvg%20preserveAspectRatio%3D%22none%22%20viewBox%3D%220%200%20100%20100%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%230071af%22%20d%3D%22%0A%20%20%20%20m%200%200%20l%200%20100%20l%20100%200%20l%20-50%20-20%20l%200%20-80%0A%20%20%22%3E%3C%2Fpath%3E%0A%3C%2Fsvg%3E");
+  width: 5vw;
 }
 .holder:nth-child(1) {
   transform: scaleX(-1);
+}
+
+@keyframes appear {
+  0% {
+    transform: scale(95%);
+  }
+  100% {
+    transform: scale(100%);
+  }
+}
+
+.winDisplay {
+  animation: appear ease 1s forwards;
 }
