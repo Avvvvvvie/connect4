@@ -1,35 +1,42 @@
-import logo from './logo.svg';
 import './App.css';
 import { Board } from './Board'
-import {useState} from "react";
+import { useState, useRef } from 'react';
 
-function LoadButton({ setBoard }) {
-    const handler = () => {
-        let data = JSON.parse(localStorage.getItem('board'))
-        setBoard(new Board(data))
-    }
+function LoadButton({ onLoad }) {
     return (
-        <button onClick={handler}>
+        <button type="button" onClick={onLoad}>
             Load Game
         </button>
     )
 }
-function SaveButton({ board }) {
-  const handler = () => {
-      let data = JSON.stringify(board.save())
-      localStorage.setItem('board', data)
-  }
+function SaveButton({ onSave }) {
   return (
-      <button onClick={handler}>
+      <button type="button" onClick={onSave}>
         Save Game
       </button>
   )
 }
 
-function ResetButton({ setBoard }) {
+function ResetButton({ onReset }) {
     return (
-        <button onClick={() => setBoard(new Board())}>
+        <button type="button" onClick={onReset}>
             Reset Game
+        </button>
+    )
+}
+
+function UndoButton({ onUndo, disabled }) {
+    return (
+        <button type="button" disabled={disabled} onClick={onUndo}>
+            Undo
+        </button>
+    )
+}
+
+function RedoButton({ onRedo, disabled }) {
+    return (
+        <button type="button" disabled={disabled} onClick={onRedo}>
+            Redo
         </button>
     )
 }
@@ -74,45 +81,93 @@ function Field({ value }) {
     )
 }
 
-function BoardView({ board, setBoard, disabled }) {
+function BoardView({ state, onColumnClick, disabled = false }) {
     return (
         <div className="board">
             <div className="holder"></div>
-            {
-                board.state.map((column, index) => {
-                    function handler() {
-                        board.play(index)
-                        setBoard(new Board(board.save()))
-                    }
-                    return (
-                        <Column key={index} onClick={disabled ? undefined : handler}>
-                            {
-                                column.map((value, index) => {
-                                    return (
-                                        <Field value={value} key={index}/>
-                                    )
-                                })
-                            }
-                        </Column>
-                    )
-                })
-            }
+            <div className="columns">
+                {
+                    state.map((column, index) => {
+                        let handler = () => {
+                            onColumnClick(index)
+                        }
+                        return (
+                            <Column key={index} onClick={disabled ? undefined : handler}>
+                                {
+                                    column.map((value, index) => {
+                                        return (
+                                            <Field value={value} key={index}/>
+                                        )
+                                    })
+                                }
+                            </Column>
+                        )
+                    })
+                }
+            </div>
             <div className="holder"></div>
         </div>
     )
 }
 
 function App() {
-  const [board, setBoard] = useState(new Board())
-  let winner = board.getWinner()
-  return (
-    <div className="App">
-        <LoadButton setBoard={setBoard}/><SaveButton board={board}/><ResetButton setBoard={setBoard}>Reset</ResetButton>
-        <BoardView disabled={!!winner} board={board} setBoard={setBoard}/>
-        <TurnDisplay value={board.getTurn()} disabled={!!winner}/>
-        <WinDisplay value={winner}/>
-    </div>
-  );
+    const [board, setBoard] = useState(new Board())
+    const [boardArray, setBoardArray] = useState([board])
+    const index = useRef(0);
+    let winner = board.getWinner()
+    function onColumnClick(index) {
+        const newBoard = new Board(board.save())
+        if(newBoard.play(index)) {
+            addToBoardArray(newBoard)
+        }
+    }
+    function onLoad() {
+        const data = JSON.parse(localStorage.getItem('board'))
+        resetBoardArray(new Board(data))
+    }
+    function onSave() {
+        let data = JSON.stringify(board.save())
+        localStorage.setItem('board', data)
+    }
+    function onReset() {
+        resetBoardArray(new Board())
+    }
+    const onUndo = () => {
+        if (index.current > 0) {
+            index.current = index.current - 1;
+            setBoard(boardArray[index.current]);
+        }
+    };
+    const onRedo = () => {
+        if (index.current < boardArray.length - 1) {
+            index.current = index.current + 1;
+            setBoard(boardArray[index.current]);
+        }
+    };
+    const addToBoardArray = (newBoard) => {
+        index.current += 1;
+        setBoard(newBoard)
+        setBoardArray(prev =>
+            [...prev.slice(0, index.current), newBoard]
+        );
+    };
+    const resetBoardArray = (newBoard) => {
+        index.current = 0
+        setBoard(newBoard)
+        setBoardArray([newBoard])
+    }
+    return (
+        <div className="App">
+            <LoadButton onLoad={onLoad}/>
+            <SaveButton onSave={onSave}/>
+            <ResetButton onReset={onReset}/>
+            <BoardView disabled={!!winner} state={board.state} onColumnClick={onColumnClick}/>
+            <UndoButton onUndo={onUndo} disabled={index.current===0 || !!winner}/>
+            <RedoButton onRedo={onRedo} disabled={index.current===boardArray.length-1 || !!winner}/>
+            <TurnDisplay value={board.getTurn()} disabled={!!winner}/>
+            <WinDisplay value={winner}/>
+        </div>
+    );
 }
 
 export default App;

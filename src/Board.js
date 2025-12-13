@@ -61,13 +61,14 @@ export class Board {
         for(row = this.state[column].length - 1; row >= 0; row--) {
             if(this.state[column][row] === Board.PLAYER.EMPTY) {
                 this.state[column][row] = this.getTurn()
-                return
+                return true
             }
         }
+        return false
     }
     save() {
         return {
-            state: this.state
+            state: this.state.map(row => [...row])
         }
     }
 }

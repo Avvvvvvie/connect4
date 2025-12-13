@@ -10,7 +10,9 @@
   --accent_shadow: #ce371d;
   --highlight: #f9f17a;
   --white: #ffffff;
-  --accent2: #525252
+  --accent2: #525252;
+  --unit: calc(min(1vh, 1vw));
+  --piece-size: 7
 }
 
 .App {
@@ -18,6 +20,9 @@
   padding: 1rem;
   width: fit-content;
   margin: auto;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 button {
@@ -40,21 +45,25 @@ button {
 button, .winDisplay, .turnDisplay {
   background: var(--accent);
   color: var(--text);
-  font-size: 2vw;
-  padding: 1vw;
-  border-radius: 3vw;
+  font-size: calc(var(--unit) * 2);
+  padding: var(--unit) calc(var(--unit) * 2);
+  border-radius: calc(var(--unit) * 3);
   font-weight: bolder;
 }
 
 .winDisplay, .turnDisplay {
-  max-width: 30vw;
-  margin: 2vw auto auto;
+  max-width: calc(var(--unit) * 30);
+  margin: calc(var(--unit)) auto auto;
 }
 
 button {
   cursor: pointer;
-  margin: 1vw;
+  margin: calc(var(--unit) * 1);
   transition: 0.3s;
+}
+
+button[disabled] {
+  opacity: 50%;
 }
 
 button:hover {
@@ -70,38 +79,40 @@ div {
   width: fit-content;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   position: relative;
-  margin: 1vw auto;
+  margin: calc(var(--unit)) auto;
 }
 
-.board .column {
+.columns {
+  background: var(--board);
+  display: flex;
+}
+.column {
   display: flex;
   flex-direction: column;
+  position: relative;
+  padding: var(--unit) 0;
 }
 
-.board .field {
-  width: 7vw;
-  height: 7vw;
-  background: var(--board);
+.column:first-child {
+  padding-left: var(--unit);
+}
+.column:last-child {
+  padding-right: var(--unit);
 }
 
-.board .field:first-child {
-  display: block;
-}
-
-.board .field .piece {
-  width: 5vw;
-  height: 5vw;
+.piece {
+  width: calc(var(--unit) * var(--piece-size));
+  height: calc(var(--unit) * var(--piece-size));
   border-radius: 50%;
-  margin: 0.75vw;
+  margin: calc(var(--unit));
   background: var(--white);
-  border: 0.5vw solid var(--board_shadow);
+  border: calc(var(--unit) * 0.5) solid var(--board_shadow);
 }
-.board .piece[data-state=BLUE] {
+.piece[data-state=BLUE] {
   background-color: var(--piece_blue_shadow);
 }
-.board .piece[data-state=RED] {
+.piece[data-state=RED] {
   background-color: var(--piece_red_shadow);
 }
 .piece::before {
@@ -123,10 +134,13 @@ div {
 
 .holder {
   background-image: url("data:image/svg+xml,%3Csvg%20preserveAspectRatio%3D%22none%22%20viewBox%3D%220%200%20100%20100%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%230071af%22%20d%3D%22%0A%20%20%20%20m%200%200%20l%200%20100%20l%20100%200%20l%20-50%20-20%20l%200%20-80%0A%20%20%22%3E%3C%2Fpath%3E%0A%3C%2Fsvg%3E");
-  width: 5vw;
+  width: calc(var(--unit) * (var(--piece-size)));
+  background-repeat: no-repeat;
 }
 .holder:nth-child(1) {
   transform: scaleX(-1);
+  position: relative;
+  left: 0.2px;
 }
 
 @keyframes appear {
