@@ -19,7 +19,7 @@
 - new Board: Daten zur Initialisierung können mitgegeben werden 
 - OnClick Handler: In der Komponente App zu finden
 - Undo/Redo Handler: In der Komponente App zu finden
-![img.png](img.png)
+
 ### Link
 https://avvvvvvie.github.io/connect4/
 
