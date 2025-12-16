@@ -16,11 +16,11 @@
 - Board.getTurn berechnet, welche Spieler an der Reihe ist (Blau beginnt)
 - Board.play setzt wenn möglich einen Stein in der angegebenen Zeile
 - Board.save gibt die zu speichernden Daten zurück
-- new Board: Daten zur Initialisierung können mitgegeben werden 
+- new Board: Daten zur Initialisierung können mitgegeben werden
 - OnClick Handler: In der Komponente App zu finden
 - Undo/Redo Handler: In der Komponente App zu finden
 
-### Link
+### Webseite
 https://avvvvvvie.github.io/connect4/
 
 ### Screenshot
