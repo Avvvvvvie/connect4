@@ -1,4 +1,6 @@
 ## Connect4
+Abgabe zum Modul WBE (Webentwicklung) an der ZHAW.
+
 ### Team
 - Annie Hemprich (hemprann@students.zhaw.ch)
 
